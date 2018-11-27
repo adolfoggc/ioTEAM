@@ -146,21 +146,12 @@ try:
                 
                 luz = 0
                 print('L:1->0')
-            if (luz == 0 and presence == 1):
+                
+            #ações com lógica invertida devido relé
+            if (luz == 1 or presence == 0):
+            
                 if (acao == 0):
                     gpio.output(25, 1)
-                    action_data = {}
-                    action_data['Date'] = return_time()
-                    action_data['State'] = 'ON'
-                    action_json_data = json.dumps(action_data)
-            
-                    client.publish(Action, action_json_data)
-
-                    print('A:0->1')
-                    acao = 1
-            if (luz == 1 or presence == 0):
-                if (acao == 1):
-                    gpio.output(25, 0)
                     action_data = {}
                     action_data['Date'] = return_time()
                     action_data['State'] = 'OFF'
@@ -169,6 +160,19 @@ try:
                     client.publish(Action, action_json_data)
 
                     print('A:1->0')
+                    acao = 1
+            if (luz == 0 and presence == 1):
+            #if (luz == 1 or presence == 0):
+                if (acao == 1):
+                    gpio.output(25, 0)
+                    action_data = {}
+                    action_data['Date'] = return_time()
+                    action_data['State'] = 'ON'
+                    action_json_data = json.dumps(action_data)
+            
+                    client.publish(Action, action_json_data)
+
+                    print('A:0->1')
                     acao = 0
 except KeyboardInterrupt:
         print '\nCtrl+C pressionado, encerrando aplicacao e saindo...'
